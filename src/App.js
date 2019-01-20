@@ -1,28 +1,35 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from 'react'
+import { ApolloProvider, Query } from 'react-apollo'
+import gql from 'graphql-tag'
+
+import './index.css'
+import { client } from './apollo/client'
 
 class App extends Component {
-  render() {
+  render () {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
-    );
+      <ApolloProvider client={client}>
+        <h1>MyFavouriteAppliances.wow.</h1>
+        <Query
+          query={gql`
+            query Products($limit: Int, $offset: Int) {
+              products(limit: $limit, offset: $offset) {
+                id
+              }
+            }
+          `}
+          variables={{ limit: 4, offset: 0 }}
+        >
+          {({ loading, data }) => (
+            <div>
+              {loading && <p>Loaing</p>}
+              {!loading && data.products.map(product => <p>{product.id}</p>)}
+            </div>
+          )}
+        </Query>
+      </ApolloProvider>
+    )
   }
 }
 
-export default App;
+export default App
