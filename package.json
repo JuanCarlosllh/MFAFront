@@ -24,7 +24,8 @@
     "build": "react-app-rewired build",
     "test": "react-app-rewired test",
     "eject": "react-scripts eject",
-    "lint": "yarn eslint ./src/*.js"
+    "lint": "yarn eslint ./src/**/*.js",
+    "schema": "get-graphql-schema http://localhost:4000 > schemas/schema.gql"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -36,15 +37,20 @@
     "not op_mini all"
   ],
   "devDependencies": {
+    "@playlyfe/gql": "^2.6.1",
     "babel-plugin-emotion": "^10.0.6",
+    "babel-plugin-graphql-tag": "^1.6.0",
     "babel-plugin-import": "^1.11.0",
     "eslint-config-standard": "^12.0.0",
     "eslint-config-standard-react": "^7.0.2",
+    "eslint-plugin-class-property": "^1.1.0",
     "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-node": "^8.0.1",
     "eslint-plugin-promise": "^4.0.1",
     "eslint-plugin-react": "^7.12.4",
     "eslint-plugin-standard": "^4.0.0",
-    "standard": "^12.0.1"
+    "get-graphql-schema": "^2.1.2",
+    "standard": "^12.0.1",
+    "watchman": "^1.0.0"
   }
 }

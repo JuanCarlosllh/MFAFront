@@ -1,4 +1,6 @@
 {
+  "parser": "babel-eslint",
   "extends": ["standard", "standard-react"],
-  "globals": { "fetch": false }
+  "globals": { "fetch": false },
+  "plugins": ["class-property"]
 }

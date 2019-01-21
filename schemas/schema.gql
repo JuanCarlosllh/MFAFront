@@ -1,0 +1,30 @@
+directive @cacheControl(maxAge: Int, scope: CacheControlScope) on FIELD_DEFINITION | OBJECT | INTERFACE
+
+enum CacheControlScope {
+  PUBLIC
+  PRIVATE
+}
+
+type Mutation {
+  _: Boolean
+}
+
+type Product {
+  id: ID!
+  name: String!
+  prize: String!
+  image: String
+  type: String
+}
+
+type Query {
+  _: Boolean
+  products(type: String, offset: Int, limit: Int, category: String): [Product]!
+}
+
+type Subscription {
+  _: Boolean
+}
+
+scalar Upload
+

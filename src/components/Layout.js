@@ -1,52 +1,75 @@
-import React from 'react'
+import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import styled from '@emotion/styled'
-import { Layout as AntdLayout, Menu } from 'antd'
+import { Layout as AntdLayout, Drawer, Icon } from 'antd'
 
-const { Header, Content, Sider } = AntdLayout
+const { Header, Content } = AntdLayout
 
 const StyledLayout = styled(AntdLayout)`
-  height: 100%;
+  min-height: 100%;
 `
 
+const StyledHeader = styled(Header)`
+  padding: 0 2rem;
+`
 const StyledContent = styled(Content)`
-  background-color: '#fff';
+  background-color: #fff;
   padding: 1.5rem;
   margin: 0;
 `
 
-export const Layout = ({ children }) => (
-  <StyledLayout>
-    <Header className='header'>
-      <div className='logo' />
-    </Header>
-    <AntdLayout>
-      <Sider width={200} style={{ background: '#fff' }}>
-        <Menu
-          mode='inline'
-          defaultSelectedKeys={['1']}
-          defaultOpenKeys={['sub1']}
-          style={{ height: '100%', borderRight: 0 }}
+const DrawerIcon = styled(Icon)`
+  color: #fff;
+  font-size: 1.2rem;
+`
+
+export class Layout extends Component {
+  state = {
+    isDraweOpen: false
+  }
+
+  openDrawer = () => {
+    this.setState({
+      isDraweOpen: true
+    })
+  }
+
+  closeDrawer = () => {
+    this.setState({
+      isDraweOpen: false
+    })
+  }
+
+  render () {
+    const { children } = this.props
+    return (
+      <StyledLayout>
+        <Drawer
+          title='Basic Drawer'
+          placement='left'
+          closable={false}
+          onClose={this.closeDrawer}
+          visible={this.state.isDraweOpen}
         >
-          <Menu.Item key='1'>Small Appliances</Menu.Item>
-          <Menu.Item key='2'>Dishwashers</Menu.Item>
-        </Menu>
-      </Sider>
-      <AntdLayout style={{ padding: '0 24px 24px' }}>
-        <StyledContent
-          style={{
-            background: '#fff',
-            padding: 24,
-            margin: 0,
-            minHeight: 280
-          }}
-        >
-          {children}
-        </StyledContent>
-      </AntdLayout>
-    </AntdLayout>
-  </StyledLayout>
-)
+          <p>Some contents...</p>
+          <p>Some contents...</p>
+          <p>Some contents...</p>
+        </Drawer>
+        <StyledHeader>
+          <DrawerIcon
+            type='menu-unfold'
+            className='trigger'
+            onClick={this.openDrawer}
+          />
+          <div className='logo' />
+        </StyledHeader>
+        <AntdLayout style={{ padding: '0 24px 24px' }}>
+          <StyledContent>{children}</StyledContent>
+        </AntdLayout>
+      </StyledLayout>
+    )
+  }
+}
 
 Layout.propTypes = {
   children: PropTypes.node.isRequired

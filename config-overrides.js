@@ -1,4 +1,4 @@
-const { override, fixBabelImports, addBabelPlugin } = require('customize-cra')
+const { override, fixBabelImports, addBabelPlugins } = require('customize-cra')
 
 module.exports = override(
   fixBabelImports('import', {
@@ -6,5 +6,5 @@ module.exports = override(
     libraryDirectory: 'es',
     style: 'css'
   }),
-  addBabelPlugin('emotion')
+  addBabelPlugins('emotion', 'graphql-tag')
 )
