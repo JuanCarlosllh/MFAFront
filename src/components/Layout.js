@@ -13,7 +13,6 @@ const StyledHeader = styled(Header)`
   padding: 0 2rem;
 `
 const StyledContent = styled(Content)`
-  background-color: #fff;
   padding: 1.5rem;
   margin: 0;
 `
