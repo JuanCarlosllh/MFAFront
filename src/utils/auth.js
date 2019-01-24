@@ -17,3 +17,17 @@ export const login = async userData => {
 export const logOut = () => window.sessionStorage.removeItem('token')
 
 export const getToken = () => `Bearer ${window.sessionStorage.getItem('token')}`
+
+export const register = async userData => {
+  try {
+    const register = await axios.post(
+      `${config.GATEWAY_URL}/register`,
+      userData
+    )
+    return register
+  } catch (e) {
+    console.log('ERROR')
+    console.error(e)
+    throw new Error('Register error')
+  }
+}

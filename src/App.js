@@ -8,6 +8,7 @@ import { Layout } from './components/Layout'
 import { ProtectedRoutes } from './components/ProtectedRoutes'
 import { ProductsContainer } from './pages/products/ProductsContainer'
 import { LoginContainer } from './pages/login/LoginContainer'
+import { RegisterContainer } from './pages/register/registerContainer'
 
 class App extends Component {
   componentDidCatch (error, info) {
@@ -23,6 +24,7 @@ class App extends Component {
               <ProductsContainer path='products' />
             </ProtectedRoutes>
             <LoginContainer path='/login' />
+            <RegisterContainer path='/register' />
           </Router>
         </Layout>
       </ApolloProvider>
