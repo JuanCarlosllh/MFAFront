@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import styled from '@emotion/styled'
+import { navigate } from '@reach/router'
 import { Form, Icon, Input, Button } from 'antd'
 
 import { login } from '../../utils/auth'
@@ -17,9 +18,14 @@ const StyledForm = styled(Form)`
   width: 100%;
 `
 
+const StyledLoginButton = styled(Button)`
+  margin-right: 1rem;
+`
+
 class LoginContainerClass extends Component {
   state = {
-    loading: false
+    loading: false,
+    loginError: false
   }
 
   handleSubmit = e => {
@@ -30,9 +36,16 @@ class LoginContainerClass extends Component {
           loading: true
         })
         login(values)
-          .then()
+          .then(() => {
+            navigate('/products')
+          })
           .catch(e => {
-            console.log(e)
+            console.log('Error:', e)
+            this.props.form.setFields({
+              password: {
+                errors: [new Error('Invalid user or password')]
+              }
+            })
           })
           .finally(() => {
             this.setState({ loading: false })
@@ -76,13 +89,13 @@ class LoginContainerClass extends Component {
             )}
           </Form.Item>
           <Form.Item>
-            <Button
+            <StyledLoginButton
               type='primary'
               htmlType='submit'
               loading={this.state.loading}
             >
               {this.state.loading ? <span>Loading</span> : <span>Log in </span>}
-            </Button>
+            </StyledLoginButton>
             Or <a href=''>register now!</a>
           </Form.Item>
         </StyledForm>
