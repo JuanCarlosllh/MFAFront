@@ -1,9 +1,13 @@
 import React, { Component, Fragment } from 'react'
-import { Query } from 'react-apollo'
+import { Query, Mutation } from 'react-apollo'
+import gql from 'graphql-tag'
 
-import { getProducts } from '../../queries/products.queries'
+import {
+  getProducts,
+  addProductToFavoritesMutation
+} from '../../queries/products.queries'
 
-import { ProductsGrid } from './ProductsGrid'
+import { ProductsGrid } from '../../components/ProductsGrid'
 
 export class ProductsContainer extends Component {
   render () {
@@ -13,7 +17,40 @@ export class ProductsContainer extends Component {
           return (
             <Fragment>
               {loading && <p>Loaing</p>}
-              {!loading && <ProductsGrid products={data.products} />}
+              {!loading && (
+                <Mutation
+                  mutation={addProductToFavoritesMutation}
+                  update={(cache, { data }) => {
+                    cache.writeFragment({
+                      id: `Product:${data.addProductToFavorites.id}`,
+                      fragment: gql`
+                        fragment myProduct on Product {
+                          id
+                        }
+                      `,
+                      data: {
+                        id: data.addProductToFavorites.id,
+                        isOnFavorites: true,
+                        __typename: 'Product'
+                      }
+                    })
+                    console.log(`Product:${data.addProductToFavorites.id}`)
+                  }}
+                >
+                  {addToFavorites => (
+                    <ProductsGrid
+                      products={data.products}
+                      actions={[
+                        {
+                          icon: 'heart',
+                          onClick: id =>
+                            addToFavorites({ variables: { productId: id } })
+                        }
+                      ]}
+                    />
+                  )}
+                </Mutation>
+              )}
             </Fragment>
           )
         }}

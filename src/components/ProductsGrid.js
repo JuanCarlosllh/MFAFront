@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import styled from '@emotion/styled'
 
-import { Card } from 'antd'
+import { Card, Icon } from 'antd'
 
 const GridContainer = styled.div`
   display: flex;
@@ -11,20 +11,26 @@ const GridContainer = styled.div`
   justify-content: center;
 `
 const ProductCard = styled(Card)`
+  width: 15rem;
   margin: 1%;
   flex-basis: 16%;
 `
 
-export const ProductsGrid = ({ products }) => {
-  console.log(products)
+export const ProductsGrid = ({ products, actions }) => {
   return (
     <GridContainer>
-      {products.map(({ id, image, name, type }) => (
+      {products.map(({ id, image, name, type, isOnFavorites }) => (
         <ProductCard
           key={id}
           hoverable
-          style={{ width: 240 }}
           cover={<img alt='example' src={image} />}
+          actions={actions.map(action => (
+            <Icon
+              type={action.icon}
+              theme={isOnFavorites && 'filled'}
+              onClick={() => action.onClick(id, action)}
+            />
+          ))}
         >
           <Card.Meta title={name} description={type} />
         </ProductCard>
@@ -41,9 +47,17 @@ ProductsGrid.propTypes = {
       image: PropTypes.string,
       description: PropTypes.string
     })
+  ),
+  actions: PropTypes.arrayOf(
+    PropTypes.shape({
+      onClick: PropTypes.func,
+      icon: PropTypes.string
+    })
   )
 }
 
 ProductsGrid.defaultProps = {
-  products: []
+  products: [],
+  actions: [],
+  onFavClick: () => {}
 }
