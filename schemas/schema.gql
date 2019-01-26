@@ -1,4 +1,7 @@
-directive @cacheControl(maxAge: Int, scope: CacheControlScope) on FIELD_DEFINITION | OBJECT | INTERFACE
+directive @cacheControl(
+  maxAge: Int
+  scope: CacheControlScope
+) on FIELD_DEFINITION | OBJECT | INTERFACE
 
 enum CacheControlScope {
   PUBLIC
@@ -12,7 +15,7 @@ type Mutation {
 type Product {
   id: ID!
   name: String!
-  prize: String!
+  price: String!
   image: String
   type: String
 }
@@ -27,4 +30,3 @@ type Subscription {
 }
 
 scalar Upload
-

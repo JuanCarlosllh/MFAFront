@@ -14,16 +14,34 @@ const ProductCard = styled(Card)`
   width: 15rem;
   margin: 1%;
   flex-basis: 16%;
+  .ant-card-meta-avatar {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 3rem;
+  }
+`
+
+const ProductImage = styled.img`
+  object-fit: contain;
+  height: 15rem;
+  width: 100%;
+  padding: 1rem;
+`
+
+const Price = styled.span`
+  font-size: 1.2rem;
 `
 
 export const ProductsGrid = ({ products, actions }) => {
   return (
     <GridContainer>
-      {products.map(({ id, image, name, type, isOnFavorites }) => (
+      {products.map(({ id, image, name, price, isOnFavorites }) => (
         <ProductCard
           key={id}
           hoverable
-          cover={<img alt='example' src={image} />}
+          cover={<ProductImage alt={name} src={image} />}
           actions={actions.map(action => (
             <Icon
               type={action.icon}
@@ -32,7 +50,7 @@ export const ProductsGrid = ({ products, actions }) => {
             />
           ))}
         >
-          <Card.Meta title={name} description={type} />
+          <Card.Meta title={name} description={<Price>{price}€</Price>} />
         </ProductCard>
       ))}
     </GridContainer>
