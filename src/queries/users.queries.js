@@ -8,17 +8,3 @@ export const getCurrentUser = gql`
     }
   }
 `
-
-export const getUserFavorites = gql`
-  query {
-    me {
-      id
-      favorites {
-        id
-        name
-        image
-        type
-      }
-    }
-  }
-`

@@ -24,19 +24,3 @@ export const getProducts = gql`
     }
   }
 `
-
-export const addProductToFavoritesMutation = gql`
-  mutation addProductToFavorites($productId: ID!) {
-    addProductToFavorites(productId: $productId) {
-      id
-    }
-  }
-`
-
-export const removeProductFromFavoritesMutation = gql`
-  mutation removeFromFavorites($productId: ID!) {
-    removeFromFavorites(productId: $productId) {
-      id
-    }
-  }
-`

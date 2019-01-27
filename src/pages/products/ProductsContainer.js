@@ -2,13 +2,10 @@ import React, { Component, Fragment } from 'react'
 import { Query, Mutation } from 'react-apollo'
 import gql from 'graphql-tag'
 import styled from '@emotion/styled'
-import { Select } from 'antd'
+import { Select, Pagination } from 'antd'
 
-import {
-  getProducts,
-  addProductToFavoritesMutation
-} from '../../queries/products.queries'
-
+import { getProducts } from '../../queries/products.queries'
+import { addProductToFavoritesMutation } from '../../queries/favorites.queries'
 import { ProductsGrid } from '../../components/ProductsGrid'
 
 const Option = Select.Option
@@ -16,7 +13,7 @@ const Option = Select.Option
 const FilterContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
 `
 const SelectContainer = styled.div`
   width: 10rem;
@@ -27,6 +24,14 @@ const SelectContainer = styled.div`
 `
 const StyledSelect = styled(Select)`
   width: 100%;
+`
+
+const PaginatorContainer = styled.div`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 2rem;
 `
 
 export class ProductsContainer extends Component {
@@ -88,38 +93,43 @@ export class ProductsContainer extends Component {
               <Fragment>
                 {loading && <p>Loaing</p>}
                 {!loading && (
-                  <Mutation
-                    mutation={addProductToFavoritesMutation}
-                    update={(cache, { data }) => {
-                      cache.writeFragment({
-                        id: `Product:${data.addProductToFavorites.id}`,
-                        fragment: gql`
-                          fragment myProduct on Product {
-                            id
+                  <Fragment>
+                    <Mutation
+                      mutation={addProductToFavoritesMutation}
+                      update={(cache, { data }) => {
+                        cache.writeFragment({
+                          id: `Product:${data.addProductToFavorites.id}`,
+                          fragment: gql`
+                            fragment myProduct on Product {
+                              id
+                            }
+                          `,
+                          data: {
+                            id: data.addProductToFavorites.id,
+                            isOnFavorites: true,
+                            __typename: 'Product'
                           }
-                        `,
-                        data: {
-                          id: data.addProductToFavorites.id,
-                          isOnFavorites: true,
-                          __typename: 'Product'
-                        }
-                      })
-                      console.log(`Product:${data.addProductToFavorites.id}`)
-                    }}
-                  >
-                    {addToFavorites => (
-                      <ProductsGrid
-                        products={data.products}
-                        actions={[
-                          {
-                            icon: 'heart',
-                            onClick: id =>
-                              addToFavorites({ variables: { productId: id } })
-                          }
-                        ]}
-                      />
-                    )}
-                  </Mutation>
+                        })
+                        console.log(`Product:${data.addProductToFavorites.id}`)
+                      }}
+                    >
+                      {addToFavorites => (
+                        <ProductsGrid
+                          products={data.products}
+                          actions={[
+                            {
+                              icon: 'heart',
+                              onClick: id =>
+                                addToFavorites({ variables: { productId: id } })
+                            }
+                          ]}
+                        />
+                      )}
+                    </Mutation>
+                    <PaginatorContainer>
+                      <Pagination defaultCurrent={6} total={500} />
+                    </PaginatorContainer>
+                  </Fragment>
                 )}
               </Fragment>
             )
