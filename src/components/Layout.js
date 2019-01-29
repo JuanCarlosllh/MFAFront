@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import PropTypes from 'prop-types'
 import { Query } from 'react-apollo'
 import styled from '@emotion/styled'
@@ -44,6 +44,16 @@ const StyledDrawer = styled(Drawer)`
   }
 `
 
+const LoginInfo = styled.div`
+  display: flex;
+  align-items: center;
+`
+
+const LoginInfoName = styled.span`
+  color: #fff;
+  margin-right: 1rem;
+`
+
 export class Layout extends Component {
   state = {
     isDraweOpen: false
@@ -65,9 +75,14 @@ export class Layout extends Component {
     navigate('/login')
   }
 
-  onLogoutClick = () => {
+  onLogoutClick = refetch => {
     navigate('/login')
     logOut()
+    if (refetch) refetch()
+  }
+
+  onLoginClick = () => {
+    navigate('/login')
   }
 
   onMenuItemClick = page => {
@@ -114,18 +129,25 @@ export class Layout extends Component {
             onClick={this.openDrawer}
           />
           <Query query={getCurrentUser}>
-            {({ loading, data }) => {
-              if (!loading && !data) {
+            {({ loading, data, refetch, error }) => {
+              if ((!loading && !data) || error) {
                 return (
-                  <Button ghost onClick={this.onLogoutClick}>
+                  <Button ghost onClick={this.onLoginClick}>
                     Log in
                   </Button>
                 )
               } else if (!loading && data) {
                 return (
-                  <Button ghost type='danger' onClick={this.onLogoutClick}>
-                    Log Out
-                  </Button>
+                  <LoginInfo>
+                    <LoginInfoName>Hi, {data.me.username}</LoginInfoName>
+                    <Button
+                      ghost
+                      type='danger'
+                      onClick={() => this.onLogoutClick(refetch)}
+                    >
+                      Log Out
+                    </Button>
+                  </LoginInfo>
                 )
               }
               return <p>Loading</p>

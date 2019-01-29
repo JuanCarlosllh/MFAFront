@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import styled from '@emotion/styled'
-import { navigate } from '@reach/router'
 import { Form, Icon, Input, Button } from 'antd'
 
 import { login } from '../../utils/auth'
@@ -37,7 +36,7 @@ class LoginContainerClass extends Component {
         })
         login(values)
           .then(() => {
-            navigate('/products')
+            window.location = '/products' // For simplicity
           })
           .catch(e => {
             console.log('Error:', e)
@@ -96,7 +95,7 @@ class LoginContainerClass extends Component {
             >
               {this.state.loading ? <span>Loading</span> : <span>Log in </span>}
             </StyledLoginButton>
-            Or <a href=''>register now!</a>
+            Or <a href='/register'>register now!</a>
           </Form.Item>
         </StyledForm>
       </PageContent>
