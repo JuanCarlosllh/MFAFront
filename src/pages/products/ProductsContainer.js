@@ -1,6 +1,5 @@
 import React, { Component, Fragment } from 'react'
 import { Query, Mutation } from 'react-apollo'
-import gql from 'graphql-tag'
 import styled from '@emotion/styled'
 import { Select, Pagination } from 'antd'
 
@@ -90,6 +89,7 @@ export class ProductsContainer extends Component {
         </FilterContainer>
         <Query
           query={getProducts}
+          fetchPolicy={'cache-and-network'}
           variables={{
             limit: this.state.limit,
             offset: this.state.offset,
@@ -106,21 +106,29 @@ export class ProductsContainer extends Component {
                   <Fragment>
                     <Mutation
                       mutation={addProductToFavoritesMutation}
-                      update={(cache, { data }) => {
-                        cache.writeFragment({
-                          id: `Product:${data.addProductToFavorites.id}`,
-                          fragment: gql`
-                            fragment myProduct on Product {
-                              id
-                            }
-                          `,
-                          data: {
-                            id: data.addProductToFavorites.id,
-                            isOnFavorites: true,
-                            __typename: 'Product'
+                      update={async (cache, { data }) => {
+                        const productsLocalResponse = cache.readQuery({
+                          query: getProducts,
+                          variables: {
+                            limit: this.state.limit,
+                            offset: this.state.offset,
+                            category: this.state.category,
+                            orderBy: this.state.orderBy,
+                            orderDirection: this.state.orderDirection
                           }
                         })
-                        console.log(`Product:${data.addProductToFavorites.id}`)
+                        productsLocalResponse.products.products = productsLocalResponse.products.products.map(
+                          product => ({
+                            ...product,
+                            isOnFavorites: product.isOnFavorites
+                              ? true
+                              : data.addProductToFavorites.id === product.id
+                          })
+                        )
+                        cache.writeQuery({
+                          query: getProducts,
+                          data: productsLocalResponse
+                        })
                       }}
                     >
                       {addToFavorites => (
@@ -130,7 +138,16 @@ export class ProductsContainer extends Component {
                             {
                               icon: 'heart',
                               onClick: id =>
-                                addToFavorites({ variables: { productId: id } })
+                                addToFavorites({
+                                  variables: { productId: id },
+                                  optimisticResponse: {
+                                    __typename: 'Mutation',
+                                    addProductToFavorites: {
+                                      __typename: 'Product',
+                                      id
+                                    }
+                                  }
+                                })
                             }
                           ]}
                         />

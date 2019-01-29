@@ -27,3 +27,16 @@ export const getProducts = gql`
     }
   }
 `
+
+export const getLocalProducts = gql`
+  query {
+    products @client {
+      id
+      name
+      price
+      image
+      type
+      isOnFavorites
+    }
+  }
+`

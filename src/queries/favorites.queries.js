@@ -7,6 +7,7 @@ export const getUserFavorites = gql`
       name
       image
       type
+      price
     }
   }
 `
