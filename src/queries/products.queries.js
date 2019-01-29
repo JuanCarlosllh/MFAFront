@@ -15,12 +15,15 @@ export const getProducts = gql`
       orderBy: $orderBy
       orderDirection: $orderDirection
     ) {
-      id
-      name
-      price
-      image
-      type
-      isOnFavorites
+      count
+      products {
+        id
+        name
+        price
+        image
+        type
+        isOnFavorites
+      }
     }
   }
 `

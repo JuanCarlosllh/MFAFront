@@ -38,12 +38,22 @@ export class ProductsContainer extends Component {
   state = {
     category: 'small-appliances',
     orderBy: 'name',
-    orderDirection: 'ASC'
+    orderDirection: 'ASC',
+    limit: 20,
+    offset: 0,
+    page: 0
   }
 
   onCategoryChanged = category => this.setState({ category })
   onOrderByChanged = orderBy => this.setState({ orderBy })
   onOrderDirectionChanged = orderDirection => this.setState({ orderDirection })
+  onPaginaterChanged = page => {
+    this.setState({
+      offset: this.state.limit * (page - 1),
+      page
+    })
+    window.scrollTo(0, 0)
+  }
 
   render () {
     return (
@@ -81,14 +91,14 @@ export class ProductsContainer extends Component {
         <Query
           query={getProducts}
           variables={{
-            limit: 20,
-            offset: 0,
+            limit: this.state.limit,
+            offset: this.state.offset,
             category: this.state.category,
             orderBy: this.state.orderBy,
             orderDirection: this.state.orderDirection
           }}
         >
-          {({ loading, data, type }) => {
+          {({ loading, data }) => {
             return (
               <Fragment>
                 {loading && <p>Loaing</p>}
@@ -115,7 +125,7 @@ export class ProductsContainer extends Component {
                     >
                       {addToFavorites => (
                         <ProductsGrid
-                          products={data.products}
+                          products={data.products.products}
                           actions={[
                             {
                               icon: 'heart',
@@ -126,8 +136,14 @@ export class ProductsContainer extends Component {
                         />
                       )}
                     </Mutation>
+
                     <PaginatorContainer>
-                      <Pagination defaultCurrent={6} total={500} />
+                      <Pagination
+                        defaultPageSize={this.state.limit}
+                        defaultCurrent={this.state.page}
+                        total={data.products.count}
+                        onChange={this.onPaginaterChanged}
+                      />
                     </PaginatorContainer>
                   </Fragment>
                 )}

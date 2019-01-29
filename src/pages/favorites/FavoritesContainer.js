@@ -27,8 +27,14 @@ export class FavoritesContainer extends Component {
         <Button type='primary' icon='share-alt' onClick={this.onOpenShareModal}>
           Sare list
         </Button>
-        <Mutation mutation={shareFavoritesMutation}>
-          {shareWidth => (
+        <Mutation
+          mutation={shareFavoritesMutation}
+          onCompleted={() => {
+            console.log('conoleted')
+            this.onCloseShareModal()
+          }}
+        >
+          {(shareWidth, { loading }) => (
             <Modal
               title='Share favorites list'
               visible={this.state.shareModalOpen}
@@ -40,7 +46,7 @@ export class FavoritesContainer extends Component {
                 <Button
                   key='submit'
                   type='primary'
-                  loading={this.stateshareModalLoading}
+                  loading={loading}
                   onClick={() =>
                     shareWidth({
                       variables: { toUserName: this.state.shareWidth }
